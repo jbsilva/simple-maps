@@ -75,5 +75,21 @@ def map_delete(
         raise typer.Exit(code=1)
 
 
+@marker_app.command("list")
+def marker_list(
+    map_id: str = typer.Option(..., help="Map id"),
+    show_expired: Optional[bool] = typer.Option(
+        None, help="Show markers that have already expired"
+    ),
+):
+    """Get all markers on a map."""
+    try:
+        response = api.marker_list(map_id)
+        typer.echo(response)
+    except HTTPError:
+        typer.secho("Error listing markers", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
