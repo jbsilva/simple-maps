@@ -1,9 +1,10 @@
-"""Tool to create maps with markers using cartes.io API."""
+"""CLI frontend to cartes.io API."""
 from typing import Optional
 
 import typer
-from cartes import Cartes, Permission, Privacy
 from requests.exceptions import HTTPError
+
+from .cartes import Cartes, Permission, Privacy
 
 app = typer.Typer()
 
@@ -165,7 +166,3 @@ def marker_delete(
             err=True,
         )
         raise typer.Exit(code=1)
-
-
-if __name__ == "__main__":  # pragma: no cover
-    app()
