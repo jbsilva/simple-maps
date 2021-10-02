@@ -129,5 +129,25 @@ def marker_create(
         raise typer.Exit(code=1)
 
 
+@marker_app.command("edit")
+def marker_edit(
+    token: str = typer.Option(..., help="Marker token"),
+    map_id: str = typer.Option(..., help="Map id"),
+    marker_id: str = typer.Option(..., help="Marker id"),
+    description: str = typer.Option(None, help="Marker description"),
+):
+    """Edit a marker on a map."""
+    try:
+        response = api.marker_edit(token, map_id, marker_id, description)
+        typer.echo(response)
+    except HTTPError:
+        typer.secho(
+            f"Error editing marker {marker_id}.",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
