@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "simple-maps"
 version = "0.1.0"
-description = ""
+description = "Tool to create maps with markers using cartes.io API"
 authors = ["Julio Batista Silva <julio@juliobs.com>"]
 
 [tool.poetry.dependencies]
