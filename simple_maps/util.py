@@ -1,5 +1,6 @@
 """Util functions."""
 import logging
+from json.decoder import JSONDecodeError
 from typing import Any, Dict, Literal, Optional
 
 import requests
@@ -15,7 +16,7 @@ def request_json(
     url: str,
     headers: Dict[str, Any] = None,
     params: Optional[Dict[str, Any]] = None,
-) -> str:  # ) -> Dict[str, Any]:
+) -> Dict[str, Any]:
     """Do a HTTP request that returns a JSON."""
     response = requests.request(
         request_type, url, headers=headers, params=params
@@ -27,5 +28,8 @@ def request_json(
         logger.error("Request error: %s", e)
         raise
 
-    return response.text
-    # return response.json()
+    try:
+        return response.json()
+    except JSONDecodeError:
+        logging.exception("API response was not a valid JSON.")
+        return {"response": response.text}
