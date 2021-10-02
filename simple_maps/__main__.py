@@ -149,5 +149,24 @@ def marker_edit(
         raise typer.Exit(code=1)
 
 
+@marker_app.command("delete")
+def marker_delete(
+    token: str = typer.Option(..., help="Token"),
+    map_id: str = typer.Option(..., help="Map id"),
+    marker_id: str = typer.Option(..., help="Marker id"),
+):
+    """Delete a marker on a map."""
+    try:
+        response = api.marker_delete(token, map_id, marker_id)
+        typer.echo(response)
+    except HTTPError:
+        typer.secho(
+            f"Error deleting marker {marker_id}.",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
