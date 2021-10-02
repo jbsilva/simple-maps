@@ -145,3 +145,21 @@ class Cartes:
                 "Invalid coordinate value for marker: (%s, %s).", lat, lng
             )
             raise ValueError
+
+    def marker_edit(
+        self,
+        token: str,
+        map_id: str,
+        marker_id: str,
+        description: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Edit a marker on a map.
+
+        PUT /api/maps/{map-id}/markers/{marker-id}
+        """
+        return request_json(
+            request_type="put",
+            url=f"{self.base_url}/maps/{map_id}/markers/{marker_id}",
+            params={"token": token, "description": description},
+        )
