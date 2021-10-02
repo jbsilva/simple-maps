@@ -91,5 +91,43 @@ def marker_list(
         raise typer.Exit(code=1)
 
 
+@marker_app.command("create")
+def marker_create(
+    map_token: str = typer.Option(..., help="Map token"),
+    map_id: str = typer.Option(..., help="Map id"),
+    lat: float = typer.Option(
+        ..., min=-90, max=90, help="The lat position of the marker"
+    ),
+    lng: float = typer.Option(
+        ..., min=-90, max=90, help="The lng position of the marker"
+    ),
+    category: Optional[int] = typer.Option(
+        None,
+        help="Category ID. Use category_name if you don't know the ID",
+    ),
+    category_name: str = typer.Option(None, help="Category name"),
+    description: str = typer.Option(None, help="Marker description"),
+):
+    """Create a marker on a map."""
+    try:
+        response = api.marker_create(
+            map_token,
+            map_id,
+            lat,
+            lng,
+            category,
+            category_name,
+            description,
+        )
+        typer.echo(response)
+    except (HTTPError, ValueError):
+        typer.secho(
+            f"Error creating marker at ({lat}, {lng}).",
+            fg=typer.colors.RED,
+            err=True,
+        )
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
