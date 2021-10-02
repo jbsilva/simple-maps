@@ -13,9 +13,26 @@ Cartes.io returns the following status codes in its API:
 | 404         | NOT FOUND             |
 | 500         | INTERNAL SERVER ERROR |
 """
-from typing import Any, Dict
+from enum import Enum
+from typing import Any, Dict, Optional
 
 from util import request_json
+
+
+class Privacy(str, Enum):
+    """Privacy level for map creation."""
+
+    PUBLIC = "public"
+    UNLISTED = "unlisted"
+    PRIVATE = "private"
+
+
+class Permission(str, Enum):
+    """Who can create markers."""
+
+    YES = "yes"
+    NO = "no"
+    LOGGED = "only_logged_in"
 
 
 class Cartes:
@@ -33,4 +50,29 @@ class Cartes:
         """
         return request_json(
             request_type="get", url=f"{self.base_url}/maps/{map_uuid}"
+        )
+
+    def map_create(
+        self,
+        title: Optional[str] = None,
+        slug: Optional[str] = None,
+        description: Optional[str] = None,
+        privacy: Optional[Privacy] = None,
+        users_can_create_markers: Optional[Permission] = None,
+    ) -> Dict[str, Any]:
+        """
+        Create a map.
+
+        POST /api/maps
+        """
+        return request_json(
+            request_type="post",
+            url=f"{self.base_url}/maps",
+            params={
+                "title": title,
+                "slug": slug,
+                "description": description,
+                "privacy": privacy,
+                "users_can_create_markers": users_can_create_markers,
+            },
         )
