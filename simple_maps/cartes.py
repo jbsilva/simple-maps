@@ -90,3 +90,19 @@ class Cartes:
                 "token": token,
             },
         )
+
+    def marker_list(
+        self, map_id: str, show_expired: Optional[bool] = None
+    ) -> Dict[str, Any]:
+        """
+        Get all markers on a map.
+
+        GET /api/maps/{map-id}/markers
+        """
+        return request_json(
+            request_type="get",
+            url=f"{self.base_url}/maps/{map_id}/markers",
+            params={
+                "show_expired": show_expired,
+            },
+        )
