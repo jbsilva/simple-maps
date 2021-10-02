@@ -13,6 +13,7 @@ Cartes.io returns the following status codes in its API:
 | 404         | NOT FOUND             |
 | 500         | INTERNAL SERVER ERROR |
 """
+import logging
 from enum import Enum
 from typing import Any, Dict, Optional
 
@@ -106,3 +107,41 @@ class Cartes:
                 "show_expired": show_expired,
             },
         )
+
+    def marker_create(
+        self,
+        map_token: str,
+        map_id: str,
+        lat: float,
+        lng: float,
+        category: Optional[int] = None,
+        category_name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Create a marker on a map.
+
+        POST /api/maps/{map-id}/markers
+        """
+        if (
+            (-90 <= lat <= 90)
+            and (-90 <= lng <= 90)
+            and (category is not None or category_name is not None)
+        ):
+            return request_json(
+                request_type="post",
+                url=f"{self.base_url}/maps/{map_id}/markers",
+                params={
+                    "map_token": map_token,
+                    "category": category,
+                    "lat": lat,
+                    "lng": lng,
+                    "description": description,
+                    "category_name": category_name,
+                },
+            )
+        else:
+            logging.error(
+                "Invalid coordinate value for marker: (%s, %s).", lat, lng
+            )
+            raise ValueError
