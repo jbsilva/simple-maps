@@ -76,3 +76,17 @@ class Cartes:
                 "users_can_create_markers": users_can_create_markers,
             },
         )
+
+    def map_delete(self, token: str, map_id: str) -> Dict[str, Any]:
+        """
+        Delete a single map.
+
+        DELETE /api/maps/{map-id}
+        """
+        return request_json(
+            request_type="delete",
+            url=f"{self.base_url}/maps/{map_id}",
+            params={
+                "token": token,
+            },
+        )
