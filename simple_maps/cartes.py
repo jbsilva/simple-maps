@@ -17,7 +17,7 @@ import logging
 from enum import Enum
 from typing import Any, Dict, Optional
 
-from util import request_json
+from .util import request_json
 
 
 class Privacy(str, Enum):
