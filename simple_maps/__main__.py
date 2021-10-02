@@ -59,5 +59,21 @@ def create_map(
         raise typer.Exit(code=1)
 
 
+@map_app.command("delete")
+def map_delete(
+    token: str = typer.Option(..., help="Token"),
+    map_id: str = typer.Option(..., help="Map id"),
+):
+    """Delete a single map."""
+    try:
+        response = api.map_delete(token, map_id)
+        typer.echo(response)
+    except HTTPError:
+        typer.secho(
+            f'Error deleting map "{map_id}"', fg=typer.colors.RED, err=True
+        )
+        raise typer.Exit(code=1)
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
