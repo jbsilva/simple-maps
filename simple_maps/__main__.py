@@ -2,9 +2,8 @@
 from typing import Optional
 
 import typer
-from requests.exceptions import HTTPError
-
 from cartes import Cartes, Permission, Privacy
+from requests.exceptions import HTTPError
 
 app = typer.Typer()
 
