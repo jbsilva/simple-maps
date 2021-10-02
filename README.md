@@ -2,6 +2,9 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square)](/LICENSE)
 [![Code Style Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black/)
+[![PyPI version](https://badge.fury.io/py/simple-maps.svg)](https://pypi.org/project/simple-maps)
+[![Downloads](https://pepy.tech/badge/simple-maps)](https://pepy.tech/project/simple-maps)
+[![BuyMeACoffee](https://img.shields.io/badge/%E2%98%95-buymeacoffee-ffdd00)](https://www.buymeacoffee.com/jbsilva)
 
 This program allows the creation of maps with markers directly from the command
 line.
