@@ -3,6 +3,7 @@ name = "simple-maps"
 version = "0.1.0"
 description = "Tool to create maps with markers using cartes.io API"
 authors = ["Julio Batista Silva <julio@juliobs.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
