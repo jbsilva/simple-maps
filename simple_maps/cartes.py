@@ -13,6 +13,9 @@ Cartes.io returns the following status codes in its API:
 | 404         | NOT FOUND             |
 | 500         | INTERNAL SERVER ERROR |
 """
+from typing import Any, Dict
+
+from util import request_json
 
 
 class Cartes:
@@ -21,3 +24,13 @@ class Cartes:
     def __init__(self, base_url: str = "https://cartes.io/api"):
         """Set API base URL."""
         self.base_url = base_url
+
+    def map_get(self, map_uuid: str) -> Dict[str, Any]:
+        """
+        Get a single map.
+
+        GET /api/maps/{map-uuid}
+        """
+        return request_json(
+            request_type="get", url=f"{self.base_url}/maps/{map_uuid}"
+        )
