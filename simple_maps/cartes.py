@@ -163,3 +163,19 @@ class Cartes:
             url=f"{self.base_url}/maps/{map_id}/markers/{marker_id}",
             params={"token": token, "description": description},
         )
+
+    def marker_delete(
+        self, token: str, map_id: str, marker_id: str
+    ) -> Dict[str, Any]:
+        """
+        Delete a marker on a map.
+
+        DELETE /api/maps/{map-id}/markers/{marker-id}
+        """
+        return request_json(
+            request_type="delete",
+            url=f"{self.base_url}/maps/{map_id}/markers/{marker_id}",
+            params={
+                "token": token,
+            },
+        )
