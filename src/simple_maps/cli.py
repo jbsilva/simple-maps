@@ -6,6 +6,8 @@ from requests.exceptions import HTTPError
 
 from .cartes import Cartes, Permission, Privacy
 
+MAP_ID_HELP = "Map id"
+
 app = typer.Typer()
 
 map_app = typer.Typer()
@@ -62,7 +64,7 @@ def create_map(
 @map_app.command("delete")
 def map_delete(
     token: str = typer.Option(..., help="Token"),
-    map_id: str = typer.Option(..., help="Map id"),
+    map_id: str = typer.Option(..., help=MAP_ID_HELP),
 ):
     """Delete a single map."""
     try:
@@ -77,7 +79,7 @@ def map_delete(
 
 @marker_app.command("list")
 def marker_list(
-    map_id: str = typer.Option(..., help="Map id"),
+    map_id: str = typer.Option(..., help=MAP_ID_HELP),
     show_expired: Optional[bool] = typer.Option(
         None, help="Show markers that have already expired"
     ),
@@ -94,7 +96,7 @@ def marker_list(
 @marker_app.command("create")
 def marker_create(
     map_token: str = typer.Option(..., help="Map token"),
-    map_id: str = typer.Option(..., help="Map id"),
+    map_id: str = typer.Option(..., help=MAP_ID_HELP),
     lat: float = typer.Option(
         ..., min=-90, max=90, help="The lat position of the marker"
     ),
@@ -132,7 +134,7 @@ def marker_create(
 @marker_app.command("edit")
 def marker_edit(
     token: str = typer.Option(..., help="Marker token"),
-    map_id: str = typer.Option(..., help="Map id"),
+    map_id: str = typer.Option(..., help=MAP_ID_HELP),
     marker_id: str = typer.Option(..., help="Marker id"),
     description: str = typer.Option(None, help="Marker description"),
 ):
@@ -152,7 +154,7 @@ def marker_edit(
 @marker_app.command("delete")
 def marker_delete(
     token: str = typer.Option(..., help="Token"),
-    map_id: str = typer.Option(..., help="Map id"),
+    map_id: str = typer.Option(..., help=MAP_ID_HELP),
     marker_id: str = typer.Option(..., help="Marker id"),
 ):
     """Delete a marker on a map."""
