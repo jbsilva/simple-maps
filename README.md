@@ -1,207 +1,212 @@
 # Simple Maps
 
 [![MIT License](https://img.shields.io/badge/license-MIT-007EC7.svg?style=flat-square)](/LICENSE)
-[![Code Style Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black/)
+[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg?style=flat-square)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/simple-maps.svg)](https://pypi.org/project/simple-maps)
 [![Downloads](https://pepy.tech/badge/simple-maps)](https://pepy.tech/project/simple-maps)
+[![Code Coverage](https://img.shields.io/badge/coverage-99%25-brightgreen.svg?style=flat-square)](/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![BuyMeACoffee](https://img.shields.io/badge/%E2%98%95-buymeacoffee-ffdd00)](https://www.buymeacoffee.com/jbsilva)
 
-This program allows the creation of maps with markers directly from the command
-line.
+A Python client and CLI for [Cartes.io](https://cartes.io), a free and open-source mapping platform.
 
+Create interactive maps with markers directly from Python code or the command line.
 
-## Installation
+## ✨ Features
 
-```console
-$ pip install simple-maps
+- **Full API Coverage** - Maps, markers, categories, users, and more
+- **CLI & Library** - Use from the terminal or import in your Python code
+- **Zero Config** - Works out of the box, no API key needed for public maps
+
+## 📦 Installation
+
+```bash
+pip install simple-maps
 ```
 
-## Features
+Or with [uv](https://docs.astral.sh/uv/):
 
-Simple Maps interacts with the cartes.io API to provide the following
-functionality:
-
-- Create a map with parameters: `map create`
-- Get information about a map: `map get`
-- Delete a map: `map delete`
-- Create a marker on a map: `marker create`
-- List all markers on a map: `marker list`
-- Edit marker description: `marker edit`
-- Delete a marker: `marker delete`
-
-
-**Usage**:
-
-```console
-$ simple_maps [OPTIONS] COMMAND [ARGS]...
+```bash
+uv add simple-maps
 ```
 
-**Options**:
+## 🚀 Quick Start
 
-* `--install-completion`: Install completion for the current shell.
-* `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
-* `--help`: Show this message and exit.
+### Python API
 
-**Commands**:
+```python
+from simple_maps import Cartes, MapCreatePayload, MarkerCreatePayload, Privacy
 
-* `map`
-* `marker`
+# Initialize the client
+api = Cartes()
 
-## `simple_maps map`
+# Create a new map
+response = api.map_create(MapCreatePayload(
+    title="Coffee Shops in NYC",
+    description="My favorite places to grab coffee",
+    privacy=Privacy.PUBLIC,
+))
 
-**Usage**:
+map_id = response["uuid"]
+map_token = response["token"]  # Save this to edit the map later
 
-```console
-$ simple_maps map [OPTIONS] COMMAND [ARGS]...
+# Add a marker
+api.marker_create(map_id, MarkerCreatePayload(
+    map_token=map_token,
+    lat=40.7128,
+    lng=-74.0060,
+    category_name="Coffee",
+    description="Best espresso in Manhattan",
+))
+
+# List all public maps
+maps = api.map_list()
 ```
 
-**Options**:
+### Command Line
 
-* `--help`: Show this message and exit.
+```bash
+# Create a map
+simple_maps map create --title "My Map" --privacy public
 
-**Commands**:
+# Get map details
+simple_maps map get --map-id <UUID>
 
-* `create`: Create a map.
-* `delete`: Delete a single map.
-* `get`: Get a single map.
+# Add a marker
+simple_maps marker create \
+    --map-id <UUID> \
+    --map-token <TOKEN> \
+    --lat 40.7128 \
+    --lng -74.0060 \
+    --category-name "Location" \
+    --description "A point of interest"
 
-### `simple_maps map create`
+# List markers on a map
+simple_maps marker list --map-id <UUID>
 
-Create a map.
-
-**Usage**:
-
-```console
-$ simple_maps map create [OPTIONS]
+# Search for maps
+simple_maps map search --query "coffee"
 ```
 
-**Options**:
+## 📖 CLI Reference
 
-* `--title TEXT`: The title of the map
-* `--slug TEXT`: The map slug. Currently un-used
-* `--description TEXT`: The description of the map and its purpose
-* `--privacy [public|unlisted|private]`: The privacy level of the map: public, unlisted, private
-* `--users-can-create-markers [yes|no|only_logged_in]`: The setting that defines who can create markers
-* `--help`: Show this message and exit.
+### Map Commands
 
-### `simple_maps map delete`
+| Command                                               | Description                    |
+| ----------------------------------------------------- | ------------------------------ |
+| `map list`                                            | List all public maps           |
+| `map search --query TEXT`                             | Search maps by keyword         |
+| `map get --map-id UUID`                               | Get details of a specific map  |
+| `map create [OPTIONS]`                                | Create a new map               |
+| `map edit --map-id UUID --token TOKEN [OPTIONS]`      | Edit an existing map           |
+| `map delete --map-id UUID --token TOKEN`              | Delete a map                   |
+| `map claim --map-id UUID --token TOKEN --api-key KEY` | Claim anonymous map ownership  |
+| `map static-image --map-id UUID`                      | Get static image URL for a map |
 
-Delete a single map.
+### Marker Commands
 
-**Usage**:
+| Command                                                                 | Description               |
+| ----------------------------------------------------------------------- | ------------------------- |
+| `marker list --map-id UUID`                                             | List all markers on a map |
+| `marker create --map-id UUID --map-token TOKEN --lat FLOAT --lng FLOAT` | Create a marker           |
+| `marker edit --map-id UUID --marker-id ID --token TOKEN`                | Edit a marker             |
+| `marker delete --map-id UUID --marker-id ID --token TOKEN`              | Delete a marker           |
+| `marker spam --map-id UUID --marker-id ID`                              | Report a marker as spam   |
 
-```console
-$ simple_maps map delete [OPTIONS]
+### Category Commands
+
+| Command                             | Description                |
+| ----------------------------------- | -------------------------- |
+| `category list --map-id UUID`       | List categories on a map   |
+| `category search --query TEXT`      | Search categories globally |
+| `category related --category-id ID` | Get related categories     |
+
+### User Commands
+
+| Command                             | Description                 |
+| ----------------------------------- | --------------------------- |
+| `user list`                         | List all users              |
+| `user get --username TEXT`          | Get user profile            |
+| `me get --api-key KEY`              | Get authenticated user info |
+| `me update --api-key KEY [OPTIONS]` | Update your profile         |
+
+## 🔧 API Reference
+
+### Models
+
+All request payloads use Pydantic models with built-in validation:
+
+```python
+from simple_maps import (
+    MapCreatePayload,      # Create/edit maps
+    MapListParams,         # Filter map listings
+    MarkerCreatePayload,   # Create markers (validates coordinates)
+    MarkerLocationPayload, # Add location history to markers
+    Privacy,               # PUBLIC, UNLISTED, PRIVATE
+    Permission,            # YES, NO, LOGGED
+)
 ```
 
-**Options**:
+### Cartes Client Methods
 
-* `--token TEXT`: Token  [required]
-* `--map-id TEXT`: Map id  [required]
-* `--help`: Show this message and exit.
+```python
+api = Cartes(base_url="https://cartes.io/api")  # Custom base URL optional
 
-### `simple_maps map get`
+# Maps
+api.map_list(params=None, api_key=None)
+api.map_search(query, api_key=None)
+api.map_get(map_uuid, api_key=None)
+api.map_create(payload=None, api_key=None)
+api.map_edit(map_token, map_id, payload, api_key=None)
+api.map_delete(map_token, map_id, api_key=None)
 
-Get a single map.
+# Markers
+api.marker_list(map_id, show_expired=None, response_format=None, api_key=None)
+api.marker_create(map_id, payload, api_key=None)
+api.marker_edit(marker_token, map_id, marker_id, description=None, api_key=None)
+api.marker_delete(marker_token, map_id, marker_id, api_key=None)
 
-**Usage**:
+# Categories
+api.category_list(map_id, api_key=None)
+api.category_search(query, api_key=None)
+api.category_related(category_id, api_key=None)
 
-```console
-$ simple_maps map get [OPTIONS]
+# Users
+api.user_list(api_key=None)
+api.user_get(username, with_maps=None, with_markers=None, api_key=None)
+api.me_get(api_key)
+api.me_update(api_key, username=None, description=None)
 ```
 
-**Options**:
+## 🛡️ Validation
 
-* `--map-id TEXT`: Id of the map  [required]
-* `--help`: Show this message and exit.
+Pydantic validates all inputs automatically:
 
-## `simple_maps marker`
+```python
+from simple_maps import MarkerCreatePayload
+from pydantic import ValidationError
 
-**Usage**:
-
-```console
-$ simple_maps marker [OPTIONS] COMMAND [ARGS]...
+try:
+    # This will raise ValidationError - latitude must be between -90 and 90
+    MarkerCreatePayload(
+        map_token="token",
+        lat=200.0,  # Invalid!
+        lng=0.0,
+        category=1,
+    )
+except ValidationError as e:
+    print(e)
+    # lat: Input should be less than or equal to 90
 ```
 
-**Options**:
+## 🔗 Links
 
-* `--help`: Show this message and exit.
+- [Cartes.io](https://cartes.io) - The mapping platform
+- [Cartes.io API Docs](https://github.com/M-Media-Group/Cartes.io/wiki/API) - Official API
+  documentation
+- [GitHub Repository](https://github.com/jbsilva/simple-maps) - Source code
+- [PyPI Package](https://pypi.org/project/simple-maps/) - Python package
 
-**Commands**:
+## 📄 License
 
-* `create`: Create a marker on a map.
-* `delete`: Delete a marker on a map.
-* `edit`: Edit a marker on a map.
-* `list`: Get all markers on a map.
-
-### `simple_maps marker create`
-
-Create a marker on a map.
-
-**Usage**:
-
-```console
-$ simple_maps marker create [OPTIONS]
-```
-
-**Options**:
-
-* `--map-token TEXT`: Map token  [required]
-* `--map-id TEXT`: Map id  [required]
-* `--lat FLOAT RANGE`: The lat position of the marker  [required]
-* `--lng FLOAT RANGE`: The lng position of the marker  [required]
-* `--category INTEGER`: Category ID. Use category_name if you don't know the ID
-* `--category-name TEXT`: Category name
-* `--description TEXT`: Marker description
-* `--help`: Show this message and exit.
-
-### `simple_maps marker delete`
-
-Delete a marker on a map.
-
-**Usage**:
-
-```console
-$ simple_maps marker delete [OPTIONS]
-```
-
-**Options**:
-
-* `--token TEXT`: Token  [required]
-* `--map-id TEXT`: Map id  [required]
-* `--marker-id TEXT`: Marker id  [required]
-* `--help`: Show this message and exit.
-
-### `simple_maps marker edit`
-
-Edit a marker on a map.
-
-**Usage**:
-
-```console
-$ simple_maps marker edit [OPTIONS]
-```
-
-**Options**:
-
-* `--token TEXT`: Marker token  [required]
-* `--map-id TEXT`: Map id  [required]
-* `--marker-id TEXT`: Marker id  [required]
-* `--description TEXT`: Marker description
-* `--help`: Show this message and exit.
-
-### `simple_maps marker list`
-
-Get all markers on a map.
-
-**Usage**:
-
-```console
-$ simple_maps marker list [OPTIONS]
-```
-
-**Options**:
-
-* `--map-id TEXT`: Map id  [required]
-* `--show-expired / --no-show-expired`: Show markers that have already expired
-* `--help`: Show this message and exit.
+MIT License - see [LICENSE](/LICENSE) for details.
